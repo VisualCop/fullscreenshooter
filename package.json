@@ -1,0 +1,21 @@
+{
+  "name": "fullscreenshot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc --watch"
+  },
+  "dependencies": {
+    "@types/nightmare": "^1.6.36",
+    "debug": "^3.1.0",
+    "gm": "^1.23.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^0.0.30",
+    "@types/gm": "^1.17.32",
+    "typescript": "^2.5.3"
+  }
+}

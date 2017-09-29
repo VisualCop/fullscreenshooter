@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "es2017",
+        "outDir": "dist",
+        "declaration": true
+    },
+    "include": [
+        "./src/*.ts",
+        "./typings/*.d.ts"
+    ]
+}
