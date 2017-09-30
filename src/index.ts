@@ -20,7 +20,7 @@ export default class FullScreenshot {
       await this.provider.resizeWidth(width);
       const resultPath = join(this.basePath, `${name}-${width}.png`);
       await this.provider.screenshot(resultPath);
-      await preprocess(resultPath, { height: this.provider.actualSize.height, width }, this.provider.pixelDensity, this.provider.scrollbarWidth) 
+      await preprocess(resultPath, { height: this.provider.windowSizes.inner.height, width }, this.provider.pixelDensity, this.provider.scrollbarWidth) 
     }
   }
 }

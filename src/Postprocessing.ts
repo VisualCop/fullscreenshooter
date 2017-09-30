@@ -43,6 +43,5 @@ export async function preprocess(
   const finalSize = await getSize(path);
   debugMsg("Final size: ", finalSize);
   assert.equal(desiredDimensions.width, finalSize.width, "Width doesnt match!");
-  
-  // assert.equal(desiredDimensions.height, finalSize.height, "Height doesnt match!"); // fixs
+  assert.equal(desiredDimensions.height, finalSize.height, "Height doesnt match!");
 }
