@@ -1,17 +1,24 @@
 import * as Nightmare from 'nightmare';
 import { ISize } from "./types";
+import { debugMsg } from "./debug";
+import * as gm from 'gm';
+import { promisify } from 'util'
 
 export class NightmareProvider {
   private constructor(private readonly nightmare: Nightmare, 
-    private readonly scrollbarWidth: number,
-    public readonly actualSize: ISize) {
+    public readonly scrollbarWidth: number,
+    public readonly actualSize: ISize,
+    public readonly pixelDensity: number
+  ) {
+      debugMsg(`Detected scrollbar width: ${scrollbarWidth}`);
   }
 
   public static async create(nightmare: Nightmare): Promise<NightmareProvider> {
     const scrollbarWidth = await getScrollbarWidth(nightmare);
     const actualSize = await getWindowSize(nightmare);
+    const pixelDensity = await getPixelDensity(nightmare);
 
-    return new NightmareProvider(nightmare, scrollbarWidth, actualSize);
+    return new NightmareProvider(nightmare, scrollbarWidth, actualSize, pixelDensity);
   }
 
   public async execute<T>(func: (...args : any[]) => T): Promise<T> {
@@ -19,8 +26,10 @@ export class NightmareProvider {
   }
 
   public async resizeWidth(width: number): Promise<void> {
-    await this.nightmare.viewport(width, this.actualSize.height);
-    await this.nightmare.wait(200);
+    console.log("pixelDensity", await this.execute(() => window.devicePixelRatio));
+
+    await this.nightmare.viewport(width + this.scrollbarWidth, this.actualSize.height);
+    await this.nightmare.wait(100);
   }
 
   public async screenshot(path: string): Promise<void> {
@@ -60,4 +69,8 @@ async function getWindowSize(nightmare: Nightmare): Promise<ISize> {
     width: window.outerWidth,
     height: window.outerHeight,
   })) as any;
+}
+
+async function getPixelDensity(nightmare: Nightmare): Promise<number> {
+  return nightmare.evaluate(() => window.devicePixelRatio) as any;
 }
