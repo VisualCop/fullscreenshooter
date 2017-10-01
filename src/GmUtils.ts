@@ -14,11 +14,15 @@ export function resize(path: string, size: ISize): Promise<void> {
   )() as any;
 }
 
-export function crop(path: string, size: ISize): Promise<void> {
-  console.log("size: ", size);
+export interface ICropArea extends ISize{
+  x?: number;
+  y?: number;
+}
+
+export function crop(path: string, area: ICropArea): Promise<void> {
   return promisify(cb =>
     gm(path)
-      .crop(size.width, size.height, 0, 0)
+      .crop(area.width, area.height, area.x || 0, area.y || 0)
       .write(path, cb)
   )() as any;
 }

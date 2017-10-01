@@ -27,14 +27,21 @@ export class NightmareProvider {
   }
 
   public async resizeWidth(width: number): Promise<void> {
-    console.log("pixelDensity", await this.execute(() => window.devicePixelRatio));
-
     await this.nightmare.viewport(width + this.scrollbarWidth, this.windowSizes.outer.height);
     await this.nightmare.wait(100);
   }
 
   public async screenshot(path: string): Promise<void> {
     await this.nightmare.screenshot(path);
+  }
+
+  public async getRealHeight(): Promise<number> {
+    return this.execute(() => document.body.scrollHeight);
+  }
+
+  public async scrollTo(height: number) {
+    await this.nightmare.evaluate(((height: number) => window.scrollTo(0, height))  as any, height as any);
+    await this.nightmare.wait(800); // @todo wait only on mac os x
   }
 }
 

@@ -12,7 +12,9 @@
     "@types/nightmare": "^1.6.36",
     "bluebird": "^3.5.0",
     "debug": "^3.1.0",
-    "gm": "^1.23.0"
+    "gm": "^1.23.0",
+    "mkdirp-promise": "^5.0.1",
+    "rimraf-then": "^1.0.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.0",

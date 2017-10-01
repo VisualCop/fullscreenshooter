@@ -6,7 +6,8 @@
         "module": "commonjs",
         "target": "es2017",
         "outDir": "dist",
-        "declaration": true
+        "declaration": true,
+        "noUnusedParameters": true
     },
     "include": [
         "./src/*.ts",
