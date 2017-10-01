@@ -1,5 +1,6 @@
 import * as Nightmare from "nightmare";
 import { join } from "path";
+import * as assert from 'assert';
 import * as mkdirp from "mkdirp-promise";
 import * as rimraf from "rimraf-then";
 
@@ -7,35 +8,51 @@ import { NightmareProvider } from "./NightmareProvider";
 import { ISize } from "./types";
 import { debugMsg } from "./debug";
 import { finalize } from "./Postprocessing";
+import { delay } from "bluebird";
+
+export interface IFullScreenshotOptions {
+  nightmare: Nightmare,
+  widths: number[],
+  basePath: string,
+  navbarOffset?: number // this should be refactored to more general mechanism
+  unreveal?: boolean
+}
 
 export default class FullScreenshot {
-  private constructor(
-    public readonly provider: NightmareProvider,
-    public readonly widths: number[],
-    public readonly basePath: string,
-    public readonly navbarOffset: number
-  ) {}
+  public readonly provider: NightmareProvider;
+  public readonly options: IFullScreenshotOptions;
 
-  public static async create(
-    nightmare: Nightmare,
-    widths: number[],
-    basePath: string,
-    navbarOffset: number // this should be refactored to more general mechanism
-  ): Promise<FullScreenshot> {
-    const provider = await NightmareProvider.create(nightmare);
-    return new FullScreenshot(provider, widths, basePath, navbarOffset || 0);
+  private constructor(
+    provider: NightmareProvider,
+    options: IFullScreenshotOptions
+  ) {
+    assert.ok(provider, "You need to pass provider");
+    assert.ok(options.basePath, "You need to pass basePath");
+    assert.ok(options.widths, "You need to pass widths");
+    this.provider = provider;
+    this.options = options;
+  }
+
+  public static async create(options: IFullScreenshotOptions): Promise<FullScreenshot> {
+    const provider = await NightmareProvider.create(options.nightmare);
+    return new FullScreenshot(provider, options);
   }
 
   async save(name: string) {
     debugMsg(`Making screenshots for ${name}`);
-    for (const width of this.widths) {
+
+    if (this.options.unreveal) {
+      await this.unreveal();
+    }
+
+    for (const width of this.options.widths) {
       debugMsg(`Making screenshot for size: ${width}`);
       await this.provider.resizeWidth(width);
 
       const documentHeight = await this.provider.getRealHeight();
       debugMsg("Real height: ", documentHeight);
 
-      const baseDir = join(this.basePath, `${name}-${width}`);
+      const baseDir = join(this.options.basePath, `${name}-${width}`);
       await mkdirp(baseDir);
 
       const subImages = [];
@@ -51,7 +68,7 @@ export default class FullScreenshot {
 
         const isFirst = i === 0;
         lastScrollPos = currentHeight;
-        currentHeight += this.provider.windowSizes.inner.height - (isFirst ? 0 : this.navbarOffset);
+        currentHeight += this.provider.windowSizes.inner.height - (isFirst ? 0 : this.options.navbarOffset || 0);
         subImages.push(imagePath);
       }
       const lastImgOffset = lastScrollPos - realScrollPosition;
@@ -62,10 +79,24 @@ export default class FullScreenshot {
         this.provider.pixelDensity,
         this.provider.scrollbarWidth,
         lastImgOffset,
-        this.navbarOffset,
+        this.options.navbarOffset || 0,
         `./screenshots/${name}-${width}.png`
       );
       // await rimraf(baseDir);
     }
+  }
+
+  public async unreveal() {
+    debugMsg("Unrevealing window");
+    const realHeight = await this.provider.getRealHeight();
+    const step = this.provider.windowSizes.inner.height;
+
+    let currentHeight = 0;
+    while (currentHeight < realHeight) {
+      await this.provider.scrollTo(currentHeight);
+      await delay(100);
+      currentHeight += step;
+    }
+    await this.provider.scrollTo(0);
   }
 }
