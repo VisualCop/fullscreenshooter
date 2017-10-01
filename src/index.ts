@@ -68,28 +68,28 @@ export default class FullScreenshot {
 
         const isFirst = i === 0;
         lastScrollPos = currentHeight;
-        currentHeight += this.provider.windowSizes.inner.height - (isFirst ? 0 : this.options.navbarOffset || 0);
+        currentHeight += this.provider.info.windowSizes.inner.height - (isFirst ? 0 : this.options.navbarOffset || 0);
         subImages.push(imagePath);
       }
       const lastImgOffset = lastScrollPos - realScrollPosition;
 
       await finalize(
         subImages,
-        { height: this.provider.windowSizes.inner.height, width },
-        this.provider.pixelDensity,
-        this.provider.scrollbarWidth,
+        { height: this.provider.info.windowSizes.inner.height, width },
+        this.provider.info.pixelDensity,
+        this.provider.info.scrollbarWidth,
         lastImgOffset,
         this.options.navbarOffset || 0,
         `./screenshots/${name}-${width}.png`
       );
-      // await rimraf(baseDir);
+      await rimraf(baseDir);
     }
   }
 
   public async unreveal() {
     debugMsg("Unrevealing window");
     const realHeight = await this.provider.getRealHeight();
-    const step = this.provider.windowSizes.inner.height;
+    const step = this.provider.info.windowSizes.inner.height;
 
     let currentHeight = 0;
     while (currentHeight < realHeight) {

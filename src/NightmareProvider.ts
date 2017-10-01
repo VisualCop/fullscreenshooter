@@ -4,22 +4,30 @@ import { debugMsg } from "./debug";
 import * as gm from "gm";
 import { promisify } from "util";
 
+export interface IProviderInfo {
+  scrollbarWidth: number;
+  windowSizes: IWindowSizes;
+  pixelDensity: number;
+  userAgent: string;
+}
+
 export class NightmareProvider {
-  private constructor(
-    private readonly nightmare: Nightmare,
-    public readonly scrollbarWidth: number,
-    public readonly windowSizes: IWindowSizes,
-    public readonly pixelDensity: number
-  ) {
-    debugMsg(`Detected scrollbar width: ${scrollbarWidth}`);
+  private constructor(public readonly nightmare: Nightmare, public readonly info: IProviderInfo) {
+    debugMsg(`Detected provider info: `, this.info);
   }
 
   public static async create(nightmare: Nightmare): Promise<NightmareProvider> {
     const scrollbarWidth = await getScrollbarWidth(nightmare);
     const windowSizes = await getWindowSizes(nightmare);
     const pixelDensity = await getPixelDensity(nightmare);
+    const userAgent = await getUserAgent(nightmare);
 
-    return new NightmareProvider(nightmare, scrollbarWidth, windowSizes, pixelDensity);
+    return new NightmareProvider(nightmare, {
+      scrollbarWidth,
+      windowSizes,
+      pixelDensity,
+      userAgent,
+    });
   }
 
   public async execute<T>(func: (...args: any[]) => T): Promise<T> {
@@ -27,7 +35,7 @@ export class NightmareProvider {
   }
 
   public async resizeWidth(width: number): Promise<void> {
-    await this.nightmare.viewport(width + this.scrollbarWidth, this.windowSizes.outer.height);
+    await this.nightmare.viewport(width + this.info.scrollbarWidth, this.info.windowSizes.outer.height);
     await this.nightmare.wait(100);
   }
 
@@ -40,11 +48,18 @@ export class NightmareProvider {
   }
 
   public async scrollTo(height: number): Promise<number> {
-    const realScrollPosition = await this.nightmare.evaluate(((height: number) => {
-      window.scrollTo(0, height);
-      return window.scrollY;
-    }) as any, height as any);
-    await this.nightmare.wait(800); // @todo wait for scrollbar to disappear only on mac os x
+    const realScrollPosition = await this.nightmare.evaluate(
+      ((height: number) => {
+        window.scrollTo(0, height);
+        return window.scrollY;
+      }) as any,
+      height as any
+    );
+
+    // wait for scrollbar to disappear only on mac os x
+    if (this.info.scrollbarWidth === 0 && this.info.userAgent.toLowerCase().includes("mac")) {
+      await this.nightmare.wait(800);
+    }
 
     return realScrollPosition as any;
   }
@@ -86,10 +101,14 @@ async function getWindowSizes(nightmare: Nightmare): Promise<IWindowSizes> {
     inner: {
       width: window.innerWidth,
       height: window.innerHeight,
-    }
+    },
   })) as any;
 }
 
 async function getPixelDensity(nightmare: Nightmare): Promise<number> {
   return nightmare.evaluate(() => window.devicePixelRatio) as any;
+}
+
+async function getUserAgent(nightmare: Nightmare): Promise<string> {
+  return nightmare.evaluate(() => window.navigator.userAgent) as any;
 }
