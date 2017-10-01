@@ -1,1 +1,1 @@
-declare module "rimraf-then";
+declare module 'rimraf-then'

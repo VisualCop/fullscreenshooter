@@ -6,10 +6,17 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "format":
+      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --list-different **/*.ts **/*.json",
+    "format:fix":
+      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --write **/*.ts **/*.json",
+    "tslint": "tslint -p . --format stylish 'src/**/*.ts' 'typings/**/*.ts'",
+    "tslint:fix": "tslint -p . --format stylish --fix 'src/**/*.ts' 'typings/**/*.ts'",
+    "lint": "yarn format && yarn tslint",
+    "lint:fix": "yarn format:fix && yarn tslint:fix"
   },
   "dependencies": {
-    "@types/nightmare": "^1.6.36",
     "bluebird": "^3.5.0",
     "debug": "^3.1.0",
     "gm": "^1.23.0",
@@ -20,6 +27,11 @@
     "@types/bluebird": "^3.5.0",
     "@types/debug": "^0.0.30",
     "@types/gm": "^1.17.32",
+    "@types/nightmare": "^1.6.36",
+    "prettier": "^1.7.3",
+    "tslint": "^5.7.0",
+    "tslint-config-prettier": "^1.5.0",
+    "tslint-language-service": "^0.9.6",
     "typescript": "^2.5.3"
   }
 }

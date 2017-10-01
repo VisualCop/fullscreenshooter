@@ -1,1 +1,1 @@
-declare module 'mkdirp-promise';
+declare module 'mkdirp-promise'

@@ -1,3 +1,3 @@
-import * as Debug from 'debug';
+import * as Debug from 'debug'
 
-export const debugMsg = Debug("fullscreenshot");
+export const debugMsg = Debug('fullscreenshot')

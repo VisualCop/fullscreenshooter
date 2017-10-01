@@ -1,16 +1,19 @@
 {
-    "compilerOptions": {
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "sourceMap": true,
-        "module": "commonjs",
-        "target": "es2017",
-        "outDir": "dist",
-        "declaration": true,
-        "noUnusedParameters": true
-    },
-    "include": [
-        "./src/*.ts",
-        "./typings/*.d.ts"
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "outDir": "dist",
+    "declaration": true,
+    "noUnusedParameters": true,
+    "plugins": [
+      {
+        "name": "tslint-language-service",
+        "alwaysShowRuleFailuresAsWarnings": true
+      }
     ]
+  },
+  "include": ["./src/*.ts", "./typings/*.d.ts"]
 }
