@@ -1,17 +1,14 @@
-import * as gm from 'gm'
 import * as Nightmare from 'nightmare'
-import { promisify } from 'util'
-import { debugMsg } from './debug'
-import { ISize, IWindowSizes } from './types'
 
-export interface IProviderInfo {
-  scrollbarWidth: number
-  windowSizes: IWindowSizes
-  pixelDensity: number
+import { debugMsg } from '../debug'
+import { IWindowSizes } from '../types'
+import {IProviderInfo, ProviderBase} from './ProviderBase';
+
+export interface INightmareProviderInfo extends IProviderInfo {
   userAgent: string
 }
 
-export class NightmareProvider {
+export class NightmareProvider extends ProviderBase {
   public static async create(nightmare: Nightmare): Promise<NightmareProvider> {
     const scrollbarWidth = await getScrollbarWidth(nightmare)
     const windowSizes = await getWindowSizes(nightmare)
@@ -25,8 +22,10 @@ export class NightmareProvider {
       userAgent,
     })
   }
-
-  private constructor(public readonly nightmare: Nightmare, public readonly info: IProviderInfo) {
+  
+  // @todo check if this shadowing info really works
+  private constructor(public readonly nightmare: Nightmare, public readonly info: INightmareProviderInfo) {
+    super(info)
     debugMsg(`Detected provider info: `, this.info)
   }
 

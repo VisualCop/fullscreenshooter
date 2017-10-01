@@ -10,7 +10,7 @@ export async function preprocess(
   pixelDensity: number,
   scrollbarWidth: number,
   navbarOffset?: number,
-) {
+): Promise<void> {
   debugMsg(`Preprocessing ${path}`)
   if (pixelDensity !== 1) {
     debugMsg('Detected pixelDensity != 1. Scaling down images...')
@@ -67,7 +67,7 @@ function getImageHeight(
   baseHeight: number,
   lastOffset: number,
   navbarHeight: number,
-) {
+): number {
   const isFirst = index === 0
   const isLast = index === allImagesLength - 1
 
@@ -88,7 +88,7 @@ async function stitchImages(
   lastOffset: number,
   navbarHeight: number,
   outputName: string,
-) {
+): Promise<{}> {
   debugMsg('Stitching images: ', images.length)
   return new Promise((resolve, reject) => {
     let acc = (gm as any)()
@@ -123,7 +123,7 @@ export async function finalize(
   lastImgOffset: number,
   navbarOffset: number,
   outputPath: string,
-) {
+): Promise<void> {
   for (const [index, subImage] of subImages.entries()) {
     const isFirst = index === 0
     if (isFirst) {

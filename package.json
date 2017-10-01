@@ -17,6 +17,7 @@
     "lint:fix": "yarn format:fix && yarn tslint:fix"
   },
   "dependencies": {
+    "@types/puppeteer": "^0.10.1",
     "bluebird": "^3.5.0",
     "debug": "^3.1.0",
     "gm": "^1.23.0",

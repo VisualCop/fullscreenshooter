@@ -5,7 +5,9 @@
     "no-floating-promises": [true, "Bluebird", "Nightmare"],
     "promise-function-async": true,
     "await-promise": [true, "Bluebird", "Nightmare"],
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "typedef": [true, "call-signature"],
+    "no-unused-variable": [true, { "ignore-pattern": "^_$" }]
   },
   "rulesDirectory": []
 }

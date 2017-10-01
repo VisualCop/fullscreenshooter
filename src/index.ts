@@ -2,16 +2,19 @@ import * as assert from 'assert'
 import * as mkdirp from 'mkdirp-promise'
 import * as Nightmare from 'nightmare'
 import { join } from 'path'
+import * as Puppeteer from 'puppeteer'
 import * as rimraf from 'rimraf-then'
 
 import { delay } from 'bluebird'
 import { debugMsg } from './debug'
-import { NightmareProvider } from './NightmareProvider'
 import { finalize } from './Postprocessing'
-import { ISize } from './types'
+import { NightmareProvider } from './providers/NightmareProvider'
+import { ProviderBase } from './providers/ProviderBase'
+import { PuppeteerProvider } from './providers/PuppeteerProvider'
 
 export interface IFullScreenshotOptions {
-  nightmare: Nightmare
+  nightmare?: Nightmare
+  puppeteer?: Puppeteer.Page
   widths: number[]
   basePath: string
   navbarOffset?: number // this should be refactored to more general mechanism
@@ -20,14 +23,14 @@ export interface IFullScreenshotOptions {
 
 export default class FullScreenshot {
   public static async create(options: IFullScreenshotOptions): Promise<FullScreenshot> {
-    const provider = await NightmareProvider.create(options.nightmare)
+    const provider = await createProvider(options)
     return new FullScreenshot(provider, options)
   }
 
-  public readonly provider: NightmareProvider
+  public readonly provider: ProviderBase
   public readonly options: IFullScreenshotOptions
 
-  private constructor(provider: NightmareProvider, options: IFullScreenshotOptions) {
+  private constructor(provider: ProviderBase, options: IFullScreenshotOptions) {
     assert.ok(provider, 'You need to pass provider')
     assert.ok(options.basePath, 'You need to pass basePath')
     assert.ok(options.widths, 'You need to pass widths')
@@ -35,7 +38,7 @@ export default class FullScreenshot {
     this.options = options
   }
 
-  public async save(name: string) {
+  public async save(name: string): Promise<void> {
     debugMsg(`Making screenshots for ${name}`)
 
     if (this.options.unreveal) {
@@ -85,7 +88,7 @@ export default class FullScreenshot {
     }
   }
 
-  public async unreveal() {
+  public async unreveal(): Promise<void> {
     debugMsg('Unrevealing window')
     const realHeight = await this.provider.getRealHeight()
     const step = this.provider.info.windowSizes.inner.height
@@ -98,4 +101,14 @@ export default class FullScreenshot {
     }
     await this.provider.scrollTo(0)
   }
+}
+
+async function createProvider(options: IFullScreenshotOptions): Promise<ProviderBase> {
+  if (options.nightmare) {
+    return NightmareProvider.create(options.nightmare)
+  } else if (options.puppeteer) {
+    return PuppeteerProvider.create(options.puppeteer)
+  }
+
+  throw new Error('Unrecognized provider!')
 }
