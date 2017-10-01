@@ -41,17 +41,20 @@ export default class FullScreenshot {
       const subImages = [];
       let currentHeight = 0;
       let i = 0;
+      let realScrollPosition = 0;
+      let lastScrollPos = 0;
       while (currentHeight < documentHeight) {
         debugMsg(`Screenshot ${i} at ${currentHeight}`);
-        await this.provider.scrollTo(currentHeight);
+        realScrollPosition = await this.provider.scrollTo(currentHeight);
         const imagePath = join(baseDir, `${name}-${width}-${i++}.png`);
         await this.provider.screenshot(imagePath);
 
         const isFirst = i === 0;
+        lastScrollPos = currentHeight;
         currentHeight += this.provider.windowSizes.inner.height - (isFirst ? 0 : this.navbarOffset);
         subImages.push(imagePath);
       }
-      const lastImgOffset = currentHeight - documentHeight + this.navbarOffset;
+      const lastImgOffset = lastScrollPos - realScrollPosition;
 
       await finalize(
         subImages,

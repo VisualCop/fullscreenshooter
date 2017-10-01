@@ -39,9 +39,14 @@ export class NightmareProvider {
     return this.execute(() => document.body.scrollHeight);
   }
 
-  public async scrollTo(height: number) {
-    await this.nightmare.evaluate(((height: number) => window.scrollTo(0, height))  as any, height as any);
-    await this.nightmare.wait(800); // @todo wait only on mac os x
+  public async scrollTo(height: number): Promise<number> {
+    const realScrollPosition = await this.nightmare.evaluate(((height: number) => {
+      window.scrollTo(0, height);
+      return window.scrollY;
+    }) as any, height as any);
+    await this.nightmare.wait(800); // @todo wait for scrollbar to disappear only on mac os x
+
+    return realScrollPosition as any;
   }
 }
 
