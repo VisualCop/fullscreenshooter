@@ -1,6 +1,8 @@
 {
-  "name": "fullscreenshot",
-  "version": "1.0.0",
+  "name": "fullscreenshooter",
+  "version": "0.0.1",
+  "repository": "https://github.com/visualcop/fullscreenshooter",
+  "author": "Krzysztof Kaczor <chris@kaczor.io>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -14,10 +16,10 @@
     "tslint": "tslint -p . --format stylish 'src/**/*.ts' 'typings/**/*.ts'",
     "tslint:fix": "tslint -p . --format stylish --fix 'src/**/*.ts' 'typings/**/*.ts'",
     "lint": "yarn format && yarn tslint",
-    "lint:fix": "yarn format:fix && yarn tslint:fix"
+    "lint:fix": "yarn format:fix && yarn tslint:fix",
+    "prepublish": "yarn lint && yarn build"
   },
   "dependencies": {
-    "@types/puppeteer": "^0.10.1",
     "bluebird": "^3.5.0",
     "debug": "^3.1.0",
     "gm": "^1.23.0",
@@ -25,6 +27,7 @@
     "rimraf-then": "^1.0.1"
   },
   "devDependencies": {
+    "@types/puppeteer": "^0.10.1",
     "@types/bluebird": "^3.5.0",
     "@types/debug": "^0.0.30",
     "@types/gm": "^1.17.32",
