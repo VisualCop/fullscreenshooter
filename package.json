@@ -9,8 +9,10 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
-    "format": "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --list-different **/*.ts **/*.json",
-    "format:fix": "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --write **/*.ts **/*.json",
+    "format":
+      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --list-different **/*.ts",
+    "format:fix":
+      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --write **/*.ts",
     "tslint": "tslint -p . --format stylish 'src/**/*.ts' 'typings/**/*.ts'",
     "tslint:fix": "tslint -p . --format stylish --fix 'src/**/*.ts' 'typings/**/*.ts'",
     "lint": "yarn format && yarn tslint",
