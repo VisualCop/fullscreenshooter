@@ -1,6 +1,6 @@
 {
   "name": "fullscreenshooter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "https://github.com/visualcop/fullscreenshooter",
   "author": "Krzysztof Kaczor <chris@kaczor.io>",
   "main": "dist/index.js",
@@ -9,10 +9,8 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
-    "format":
-      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --list-different **/*.ts **/*.json",
-    "format:fix":
-      "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --write **/*.ts **/*.json",
+    "format": "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --list-different **/*.ts **/*.json",
+    "format:fix": "prettier --print-width 100 --tab-width 2 --no-semi --single-quote --trailing-comma all --parser typescript --ignore-path .gitignore --write **/*.ts **/*.json",
     "tslint": "tslint -p . --format stylish 'src/**/*.ts' 'typings/**/*.ts'",
     "tslint:fix": "tslint -p . --format stylish --fix 'src/**/*.ts' 'typings/**/*.ts'",
     "lint": "yarn format && yarn tslint",
