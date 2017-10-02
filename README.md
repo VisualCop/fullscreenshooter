@@ -2,7 +2,7 @@
 Driver agnostic tool for reliable creation of full page screenshots during e2e tests
 
 ```sh
-npm install Fullscreenshooter
+npm install fullscreenshooter
 ```
 
 make sure that you have `imagemagick` and `graphicsmagick` installed on your system.
@@ -27,7 +27,7 @@ apt-get install -y imagemagick graphicsmagick
 With `puppeteer`: 
 
 ```javascript
-const { default: Fullscreenshooter } = require('Fullscreenshooter');
+const { default: Fullscreenshooter } = require('fullscreenshooter');
 
 const basePath = join(process.cwd(), "screenshots");
 const fullscreenshooter = await Fullscreenshooter.create({
