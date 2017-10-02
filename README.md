@@ -34,6 +34,7 @@ const fullscreenshooter = await Fullscreenshooter.create({
   basePath,
   navbarOffset: 61,     // offset for sticky navbar (optional)
   unreveal: true,       // if page has reveal effects this will scroll it way to the bottom before making screenshots (optional)
+  disableAnimations: ['#react-root svg'], // disable animations on these elements to make screenshot deterministic (optional)
   widths: [350, 1500],
   puppeteer: page
 })

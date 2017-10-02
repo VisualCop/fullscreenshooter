@@ -24,8 +24,8 @@ export class PuppeteerProvider extends ProviderBase {
     debugMsg(`Detected provider info: `, this.info)
   }
 
-  public async execute<T>(func: (...args: any[]) => T): Promise<T> {
-    return (this.puppeteer.evaluate(func) as any) as Promise<T>
+  public async execute<T>(func: (...args: any[]) => T, ...args: any[]): Promise<T> {
+    return (this.puppeteer.evaluate(func, ...args) as any) as Promise<T>
   }
 
   public async resizeWidth(width: number): Promise<void> {

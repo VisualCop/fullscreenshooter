@@ -17,6 +17,7 @@ export interface IFullScreenshotOptions {
   puppeteer?: Puppeteer.Page
   widths: number[]
   basePath: string
+  disableAnimations?: string[] // list of selectors to disable animations
   navbarOffset?: number // this should be refactored to more general mechanism
   unreveal?: boolean
 }
@@ -43,6 +44,10 @@ export default class FullScreenshot {
 
     if (this.options.unreveal) {
       await this.unreveal()
+    }
+
+    if (this.options.disableAnimations) {
+      await this.disableAnimations()
     }
 
     for (const width of this.options.widths) {
@@ -100,6 +105,18 @@ export default class FullScreenshot {
       currentHeight += step
     }
     await this.provider.scrollTo(0)
+  }
+
+  public async disableAnimations(): Promise<void> {
+    debugMsg('Disabling animations')
+
+    await this.provider.execute(
+      (selectors: string) =>
+        [...document.querySelectorAll(selectors)].forEach(
+          (e: any) => (e.style.animation = 'unset'),
+        ),
+      this.options.disableAnimations!.join(','),
+    )
   }
 }
 
