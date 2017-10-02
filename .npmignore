@@ -2,3 +2,4 @@ src
 typings
 tsconfig.json
 tslint.json
+.vscode
