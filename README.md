@@ -1,8 +1,21 @@
-# Fullscreenshot
+# Fullscreenshooter
 Driver agnostic tool for reliable creation of full page screenshots 
 
 ```sh
-npm install --save-dev fullscreenshot
+npm install Fullscreenshooter
+```
+
+make sure that you have `imagemagick` and `graphicsmagick` installed on your system.
+
+```sh
+brew install imagemagick
+brew install graphicsmagick
+```
+
+or 
+
+```sh
+apt-get install -y imagemagick graphicsmagick
 ```
 
 ## Supported drivers: 
@@ -14,10 +27,10 @@ npm install --save-dev fullscreenshot
 With `puppeteer`: 
 
 ```javascript
-const { default: Fullscreenshot } = require('fullscreenshot');
+const { default: Fullscreenshooter } = require('Fullscreenshooter');
 
 const basePath = join(process.cwd(), "screenshots");
-const fullscreenshot = await Fullscreenshot.create({
+const fullscreenshooter = await Fullscreenshooter.create({
   basePath,
   navbarOffset: 61,     // offset for sticky navbar
   unreveal: true,       // if page has reveal effects this will scroll it way to the bottom before making screenshots
@@ -25,8 +38,8 @@ const fullscreenshot = await Fullscreenshot.create({
   puppeteer: page
 })
 
-await fullscreenshot.save("index");
+await fullscreenshooter.save("index");
 ```
 
 ### How it works:
-It creates your full page screenshot by making smaller, screenshots of a given viewport and then merging them together. This is why `navbarOffset` is needed for sticky navbars.
+It creates full page screenshot by making smaller, screenshots of a given viewport and then merging them together. That's is why `navbarOffset` is needed for sticky navbars.
