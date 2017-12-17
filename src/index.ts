@@ -87,7 +87,7 @@ export default class FullScreenshot {
         this.provider.info.scrollbarWidth,
         lastImgOffset,
         this.options.navbarOffset || 0,
-        `./screenshots/${name}-${width}.png`,
+        join(this.options.basePath, `${name}-${width}.png`),
       )
       await rimraf(baseDir)
     }
